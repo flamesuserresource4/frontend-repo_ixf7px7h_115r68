@@ -1,5 +1,6 @@
 import React from 'react';
 import { PlayCircle, Activity, DollarSign } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const samplePrices = [
   { pair: 'ETH/USDC', uni: 100.5, sushi: 100.3, curve: 100.7 },
@@ -17,52 +18,78 @@ export default function LiveArbDashboard() {
   return (
     <section id="live" className="mx-auto max-w-7xl px-6 py-16">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Real-time Prices</h3>
-            <Activity className="h-5 w-5 text-blue-600" />
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.4 }}
+          className="relative rounded-2xl p-[1px]"
+        >
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/50 via-blue-500/50 to-orange-400/50 opacity-60 blur-xl" />
+          <div className="relative rounded-2xl bg-white/10 p-6 backdrop-blur-xl ring-1 ring-white/20">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="bg-gradient-to-r from-purple-300 via-blue-300 to-orange-200 bg-clip-text text-lg font-semibold text-transparent">Real-time Prices</h3>
+              <Activity className="h-5 w-5 text-white" />
+            </div>
+            <div className="space-y-3">
+              {samplePrices.map((p, i) => (
+                <div key={i} className="grid grid-cols-4 items-center gap-3 rounded-xl bg-white/5 px-4 py-3 text-sm ring-1 ring-white/10">
+                  <div className="font-medium text-white">{p.pair}</div>
+                  <div className="text-white/80">Uniswap: {p.uni}</div>
+                  <div className="text-white/80">Sushi: {p.sushi}</div>
+                  <div className="text-white/80">Curve: {p.curve}</div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="space-y-3">
-            {samplePrices.map((p, i) => (
-              <div key={i} className="grid grid-cols-4 items-center gap-3 rounded-lg bg-gray-50 px-4 py-3 text-sm">
-                <div className="font-medium text-gray-900">{p.pair}</div>
-                <div className="text-gray-700">Uniswap: {p.uni}</div>
-                <div className="text-gray-700">Sushi: {p.sushi}</div>
-                <div className="text-gray-700">Curve: {p.curve}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+        </motion.div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Detections & Executions</h3>
-            <PlayCircle className="h-5 w-5 text-emerald-600" />
-          </div>
-          <div className="space-y-3">
-            {sampleExecs.map((e) => (
-              <div key={e.id} className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3 text-sm">
-                <div>
-                  <div className="font-medium text-gray-900">{e.id}</div>
-                  <div className="text-gray-600">{e.route}</div>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.4, delay: 0.05 }}
+          className="relative rounded-2xl p-[1px]"
+        >
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/50 via-blue-500/50 to-orange-400/50 opacity-60 blur-xl" />
+          <div className="relative rounded-2xl bg-white/10 p-6 backdrop-blur-xl ring-1 ring-white/20">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="bg-gradient-to-r from-purple-300 via-blue-300 to-orange-200 bg-clip-text text-lg font-semibold text-transparent">Detections & Executions</h3>
+              <PlayCircle className="h-5 w-5 text-white" />
+            </div>
+            <div className="space-y-3">
+              {sampleExecs.map((e) => (
+                <div key={e.id} className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3 text-sm ring-1 ring-white/10">
+                  <div>
+                    <div className="font-medium text-white">{e.id}</div>
+                    <div className="text-white/80">{e.route}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-white/90">{e.pair} • {e.size}</div>
+                    <div className="font-semibold text-emerald-300">+${e.profit.toFixed(2)}</div>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-gray-800">{e.pair} • {e.size}</div>
-                  <div className="font-semibold text-emerald-600">+${e.profit.toFixed(2)}</div>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="mt-6 flex items-center justify-between rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center gap-3">
-          <DollarSign className="h-5 w-5 text-amber-600" />
-          <p className="text-sm text-gray-700">Comparison: 50 arbs/min on Monad vs 3/min on Ethereum. Gas: $0.50 vs $50. Net profit: $200–$500/min.</p>
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="mt-6 flex items-center justify-between rounded-2xl bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-orange-500/20 p-[1px]"
+      >
+        <div className="flex w-full items-center justify-between rounded-2xl bg-white/10 p-6 backdrop-blur-xl ring-1 ring-white/20">
+          <div className="flex items-center gap-3">
+            <DollarSign className="h-5 w-5 text-amber-300" />
+            <p className="text-sm text-white/85">Comparison: 50 arbs/min on Monad vs 3/min on Ethereum. Gas: $0.50 vs $50. Net profit: $200–$500/min.</p>
+          </div>
+          <button className="rounded-xl bg-white/15 px-4 py-2 text-sm font-medium text-white ring-1 ring-white/30 backdrop-blur transition hover:bg-white/25">Simulate Batch</button>
         </div>
-        <button className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800">Simulate Batch</button>
-      </div>
+      </motion.div>
     </section>
   );
 }
