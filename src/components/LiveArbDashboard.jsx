@@ -1,20 +1,26 @@
 import React from 'react';
 import { PlayCircle, Activity, DollarSign } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-const samplePrices = [
-  { pair: 'ETH/USDC', uni: 100.5, sushi: 100.3, curve: 100.7 },
-  { pair: 'WBTC/ETH', uni: 14.12, sushi: 14.09, curve: 14.16 },
-  { pair: 'DAI/USDC', uni: 1.0002, sushi: 1.0001, curve: 1.0004 },
-];
-
-const sampleExecs = [
-  { id: 'ARB-10231', route: 'Buy on Sushi → Sell on Curve', pair: 'ETH/USDC', size: '10 ETH', profit: 20.00 },
-  { id: 'ARB-10232', route: 'ETH→USDC→DAI→WBTC→ETH', pair: 'Multi-hop', size: '2 ETH', profit: 45.50 },
-  { id: 'ARB-10233', route: 'Buy on Uni → Sell on Curve', pair: 'WBTC/ETH', size: '0.5 WBTC', profit: 32.10 },
-];
+import { useLiveData } from './LiveDataProvider';
 
 export default function LiveArbDashboard() {
+  const { prices, executions } = useLiveData();
+
+  const samplePrices = [
+    { pair: 'ETH/USDC', uni: 100.5, sushi: 100.3, curve: 100.7 },
+    { pair: 'WBTC/ETH', uni: 14.12, sushi: 14.09, curve: 14.16 },
+    { pair: 'DAI/USDC', uni: 1.0002, sushi: 1.0001, curve: 1.0004 },
+  ];
+
+  const sampleExecs = [
+    { id: 'ARB-10231', route: 'Buy on Sushi → Sell on Curve', pair: 'ETH/USDC', size: '10 ETH', profit: 20.0 },
+    { id: 'ARB-10232', route: 'ETH→USDC→DAI→WBTC→ETH', pair: 'Multi-hop', size: '2 ETH', profit: 45.5 },
+    { id: 'ARB-10233', route: 'Buy on Uni → Sell on Curve', pair: 'WBTC/ETH', size: '0.5 WBTC', profit: 32.1 },
+  ];
+
+  const rows = prices.length ? prices : samplePrices;
+  const execs = executions.length ? executions : sampleExecs;
+
   return (
     <section id="live" className="mx-auto max-w-7xl px-6 py-16">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -29,10 +35,16 @@ export default function LiveArbDashboard() {
           <div className="relative rounded-2xl bg-white/10 p-6 backdrop-blur-xl ring-1 ring-white/20">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="bg-gradient-to-r from-purple-300 via-blue-300 to-orange-200 bg-clip-text text-lg font-semibold text-transparent">Real-time Prices</h3>
-              <Activity className="h-5 w-5 text-white" />
+              <div className="flex items-center gap-2 text-xs text-white/80">
+                <span className="relative inline-flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/60 opacity-75"></span>
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+                </span>
+                Live
+              </div>
             </div>
             <div className="space-y-3">
-              {samplePrices.map((p, i) => (
+              {rows.map((p, i) => (
                 <div key={i} className="grid grid-cols-4 items-center gap-3 rounded-xl bg-white/5 px-4 py-3 text-sm ring-1 ring-white/10">
                   <div className="font-medium text-white">{p.pair}</div>
                   <div className="text-white/80">Uniswap: {p.uni}</div>
@@ -58,7 +70,7 @@ export default function LiveArbDashboard() {
               <PlayCircle className="h-5 w-5 text-white" />
             </div>
             <div className="space-y-3">
-              {sampleExecs.map((e) => (
+              {execs.map((e) => (
                 <div key={e.id} className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3 text-sm ring-1 ring-white/10">
                   <div>
                     <div className="font-medium text-white">{e.id}</div>
@@ -66,7 +78,7 @@ export default function LiveArbDashboard() {
                   </div>
                   <div className="text-right">
                     <div className="text-white/90">{e.pair} • {e.size}</div>
-                    <div className="font-semibold text-emerald-300">+${e.profit.toFixed(2)}</div>
+                    <div className="font-semibold text-emerald-300">+${Number(e.profit).toFixed(2)}</div>
                   </div>
                 </div>
               ))}
